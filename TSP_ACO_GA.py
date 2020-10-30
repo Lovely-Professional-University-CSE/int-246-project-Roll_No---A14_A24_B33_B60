@@ -101,3 +101,39 @@ def crossover(parents, crossover_rate=0.9):
     return ordered()
 
 
+#mutation function
+def mutation(children, mutation_rate=0.05):
+    def swap():
+        for i, child in enumerate(children):
+            if numpy.random.random() < mutation_rate:
+                [a, b] = numpy.random.randint(0, len(child), 2)
+                children[i][a], children[i][b] = children[i][b], children[i][a]
+        return children
+    return swap()
+
+
+# Stop criterion function
+def stop():
+    return False
+
+# Elitism function
+def elitism(population, fitness, n):
+    # Select n most suitable individuals
+    return [e[0] for e in sorted(zip(population, fitness),
+                                 key=lambda x:x[1], reverse=True)[:n]]
+
+
+def base_algorithm(pop_size, max_generations, elite_size=0):
+    population = init(pop_size)
+    yield 0, population, fit(population)
+    for g in range(max_generations):
+        fitness = fit(population)
+        elite = elitism(population, fitness, elite_size)
+        parents = selection(population, fitness, pop_size - elite_size)
+        children = crossover(parents)
+        children = mutation(children)
+        population = elite + children
+        yield g+1, population, fit(population)
+        #if stop():
+            #break
+
