@@ -252,3 +252,32 @@ def ga():
             for i in range(self.num_nodes):
                 self.distance += self.edges[self.tour[i]][self.tour[(i + 1) % self.num_nodes]].weight
             return self.distance
+        def __init__(self, mode='ACS', colony_size=10, elitist_weight=1.0, min_scaling_factor=0.001, alpha=1.0, beta=3.0,
+                 rho=0.1, pheromone_deposit_weight=1.0, initial_pheromone=1.0, steps=100, nodes=None, labels=None):
+        self.mode = mode
+        self.colony_size = colony_size
+        self.elitist_weight = elitist_weight
+        self.min_scaling_factor = min_scaling_factor
+        self.rho = rho
+        self.pheromone_deposit_weight = pheromone_deposit_weight
+        self.steps = steps
+        self.num_nodes = len(nodes)
+        self.nodes = nodes
+        self.tours=[]
+        cities=self.nodes
+        if labels is not None:
+            self.labels = labels
+        else:
+            self.labels = range(1, self.num_nodes + 1)
+        self.edges = [[None] * self.num_nodes for _ in range(self.num_nodes)]
+        for i in range(self.num_nodes):
+            for j in range(i + 1, self.num_nodes):
+                self.edges[i][j] = self.edges[j][i] = self.Edge(i, j, math.sqrt(
+                    pow(self.nodes[i][0] - self.nodes[j][0], 2.0) + pow(self.nodes[i][1] - self.nodes[j][1], 2.0)),
+                                                                initial_pheromone)
+        self.ants = [self.Ant(alpha, beta, self.num_nodes, self.edges) for _ in range(self.colony_size)]
+        self.global_best_tour = None
+        self.global_best_tours =[]
+        self.global_best_distance = float("inf")
+
+    
