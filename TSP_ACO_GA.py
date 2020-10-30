@@ -346,4 +346,35 @@ class SolveTSPUsingACO:
         ax3.set_ylabel('y (kms)')
         title = ax3.set_title('Best Path Cost', fontweight='bold', fontsize=13, pad=10)
         
+        def init():
+            pass
+
+        def animate(iter):
+            if iter < len(costs):
+                costline.set_data(list(range(1, iter+2)), costs[:iter+1])
+#                 print(costline)
+                
+            if iter > 0 and iter <= len(costs):
+                ax3.lines.pop(0)
+                
+            if iter < len(costs):
+                x = [xx[i] for i in paths[iter]]
+                y = [yy[j] for j in paths[iter]]
+                x.append(x[0])
+                y.append(y[0])
+                ax3.plot(x, y, '--', alpha=0.9)
+                title.set_text(f"Best Path Cost : {round(costs[iter], 2)} kms")
+            elif iter == len(costs):
+                x = [self.nodes[i][0] for i in self.global_best_tour]
+                y = [self.nodes[i][1] for i in self.global_best_tour]
+                x.append(x[0])
+                y.append(y[0])
+                ax3.plot(x, y, '-', c='#000000', alpha=0.8, lw=1.5)
+#                 title.set_text(f"Best Path Cost : {round(aco.min_path_cost, 2)} kms")
+            return costline
+
+        anim = FuncAnimation(fig, animate, init_func=init, frames=len(costs)+1+50, interval=50, repeat=False)
+        anim.save('abc.gif', writer='')
+        print("Animation saved.")
         
+
