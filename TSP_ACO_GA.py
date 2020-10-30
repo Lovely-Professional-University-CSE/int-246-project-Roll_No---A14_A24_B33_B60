@@ -378,3 +378,10 @@ class SolveTSPUsingACO:
         print("Animation saved.")
         
 
+ga()      
+_colony_size = 10
+_steps = 50
+cities=[]
+elitist = SolveTSPUsingACO(mode='Elitist', colony_size=_colony_size, steps=_steps, nodes=_nodes)
+elitist.run()
+elitist.plot()
