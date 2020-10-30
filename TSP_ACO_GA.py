@@ -137,3 +137,71 @@ def base_algorithm(pop_size, max_generations, elite_size=0):
         #if stop():
             #break
 
+# Animation  Function
+
+def ga():
+    run = base_algorithm(pop_size=100, max_generations=300, elite_size=10)
+    fig = plt.figure(figsize=(12, 8))
+    gs = fig.add_gridspec(2, 3, wspace=0.45, hspace=0.35)
+
+    ax3 = fig.add_subplot(gs[0, 0])
+    ax3.set_xlabel('x (kms)')
+    ax3.set_ylabel('y (kms)')
+    ax3.set_title('Cities', fontweight='bold', pad=10)
+    ax3.set_xlim([-400, 410])
+    ax3.set_ylim([-400, 410])
+    ax3.scatter(CITY_COORD[:, 0],CITY_COORD[:, 1], c='r', edgecolors='black', alpha=0.85)
+    
+
+    x = []
+    y_min = []
+    y_mean = []
+
+    ax0 = fig.add_subplot(gs[1, 0])
+    
+
+    ax1 = fig.add_subplot(gs[:, 1:])
+  
+
+    def animate(args):
+        ax0.clear()
+        ax1.clear()
+        ax0.set_title('Best path distance in every generation', fontweight='bold', pad=10)
+        ax0.set_xlabel('Generations')
+        ax0.set_ylabel('Distance (kms)')
+        g, population, fitness = args
+        x.append(g)
+        dist = [1/f for f in fitness]
+        y_min.append(numpy.min(dist))
+        y_mean.append(numpy.mean(dist))
+        ax0.plot(x, y_min, color='blue', alpha=0.7, label='Fittest individual')
+        #ax0.plot(x, y_mean, color='blue', alpha=0.7, label='Média da população')
+        ax0.legend(loc='upper right')
+        #ax1.set_title('Fittest individual')
+        ax1.set_title(f"Best Path Cost : {numpy.min(dist)} kms")
+        ax1.set_xlabel('x (kms)')
+        ax1.set_ylabel('y (kms)')
+        ax1.set_xlim([-400, 410])
+        ax1.set_ylim([-400, 410])
+        ax1.scatter(CITY_COORD[:, 0],
+                    CITY_COORD[:, 1], c='r', edgecolors='black', alpha=0.85)
+        solution = max(zip(population, fitness), key=lambda x: x[1])[0]
+        P = numpy.array([CITY_DICT[s]
+                         for s in solution] + [CITY_DICT[solution[0]]])
+        ax1.plot(P[:, 0], P[:, 1], '--',c='black', alpha=0.85)
+        return
+
+
+    try:
+
+        #anim = matplotlib.animation.FuncAnimation(
+        anim =FuncAnimation(
+            fig, animate, frames=run, interval=50, repeat=False)
+        anim.save(f'xyz.gif', writer='')
+
+        #plt.tight_layout(pad=3.5)
+        #plt.show()
+
+    except AttributeError:
+
+        pass
