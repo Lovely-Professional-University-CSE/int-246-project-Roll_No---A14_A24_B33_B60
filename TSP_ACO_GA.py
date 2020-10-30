@@ -206,9 +206,9 @@ def ga():
 
         pass
     
-    #Ant colony Optimization
+#Ant colony Optimization
     
-    class SolveTSPUsingACO:
+class SolveTSPUsingACO:
     class Edge:
         def __init__(self, a, b, weight, initial_pheromone):
             self.a = a
@@ -252,32 +252,98 @@ def ga():
             for i in range(self.num_nodes):
                 self.distance += self.edges[self.tour[i]][self.tour[(i + 1) % self.num_nodes]].weight
             return self.distance
-        def __init__(self, mode='ACS', colony_size=10, elitist_weight=1.0, min_scaling_factor=0.001, alpha=1.0, beta=3.0,
+    def __init__(self, mode='ACS', colony_size=10, elitist_weight=1.0, min_scaling_factor=0.001, alpha=1.0, beta=3.0,
                  rho=0.1, pheromone_deposit_weight=1.0, initial_pheromone=1.0, steps=100, nodes=None, labels=None):
-        self.mode = mode
-        self.colony_size = colony_size
-        self.elitist_weight = elitist_weight
-        self.min_scaling_factor = min_scaling_factor
-        self.rho = rho
-        self.pheromone_deposit_weight = pheromone_deposit_weight
-        self.steps = steps
-        self.num_nodes = len(nodes)
-        self.nodes = nodes
-        self.tours=[]
-        cities=self.nodes
-        if labels is not None:
-            self.labels = labels
-        else:
-            self.labels = range(1, self.num_nodes + 1)
-        self.edges = [[None] * self.num_nodes for _ in range(self.num_nodes)]
-        for i in range(self.num_nodes):
-            for j in range(i + 1, self.num_nodes):
-                self.edges[i][j] = self.edges[j][i] = self.Edge(i, j, math.sqrt(
-                    pow(self.nodes[i][0] - self.nodes[j][0], 2.0) + pow(self.nodes[i][1] - self.nodes[j][1], 2.0)),
+    self.mode = mode
+    self.colony_size = colony_size
+    self.elitist_weight = elitist_weight
+    self.min_scaling_factor = min_scaling_factor
+    self.rho = rho
+    self.pheromone_deposit_weight = pheromone_deposit_weight
+    self.steps = steps
+    self.num_nodes = len(nodes)
+    self.nodes = nodes
+    self.tours=[]
+    cities=self.nodes
+    if labels is not None:
+        self.labels = labels
+    else:
+        self.labels = range(1, self.num_nodes + 1)
+    self.edges = [[None] * self.num_nodes for _ in range(self.num_nodes)]
+    for i in range(self.num_nodes):
+        for j in range(i + 1, self.num_nodes):
+            self.edges[i][j] = self.edges[j][i] = self.Edge(i, j, math.sqrt(
+                pow(self.nodes[i][0] - self.nodes[j][0], 2.0) + pow(self.nodes[i][1] - self.nodes[j][1], 2.0)),
                                                                 initial_pheromone)
-        self.ants = [self.Ant(alpha, beta, self.num_nodes, self.edges) for _ in range(self.colony_size)]
-        self.global_best_tour = None
-        self.global_best_tours =[]
-        self.global_best_distance = float("inf")
-
+    self.ants = [self.Ant(alpha, beta, self.num_nodes, self.edges) for _ in range(self.colony_size)]
+    self.global_best_tour = None
+    self.global_best_tours =[]
+    self.global_best_distance = float("inf")
     
+    def _add_pheromone(self, tour, distance, weight=1.0):
+        pheromone_to_add = self.pheromone_deposit_weight / distance
+        for i in range(self.num_nodes):
+            self.edges[tour[i]][tour[(i + 1) % self.num_nodes]].pheromone += weight * pheromone_to_add
+    def _elitist(self):
+        path=[]
+        cost=[]
+        for step in range(self.steps):
+            self.tours=[]
+            for ant in self.ants:
+                self._add_pheromone(ant.find_tour(), ant.get_distance())
+                #self.tours.append(ant.tour)
+                l=[]
+                for i in ant.tour:
+                    l.append(self.nodes[i])
+                self.tours.append(l)
+                if ant.distance < self.global_best_distance:
+                    self.global_best_tour = ant.tour
+                    self.global_best_distance = ant.distance
+            self._add_pheromone(self.global_best_tour, self.global_best_distance, weight=self.elitist_weight)
+            path.append(self.global_best_tour)
+            cost.append(self.global_best_distance)
+            for i in range(self.num_nodes):
+                for j in range(i + 1, self.num_nodes):
+                    self.edges[i][j].pheromone *= (1.0 - self.rho)
+        self.bhagwan_bharose(path,cost)
+        
+    def run(self):
+        print('Started : {0}'.format(self.mode))
+        self._elitist()
+        print('Ended : {0}'.format(self.mode))
+        print('Sequence : <- {0} ->'.format(' - '.join(str(self.labels[i]) for i in self.global_best_tour)))
+        print('Total distance travelled to complete the tour : {0}\n'.format(round(self.global_best_distance, 2)))
+
+    def plot(self):
+        webbrowser.open_new_tab('a.html')
+        
+            
+    def bhagwan_bharose(self,paths, costs,animation_filename="ACO_TSP_Berlin52"):
+        global xx,yy
+        fig = plt.figure(figsize=(12, 8))
+        gs = fig.add_gridspec(2, 3, wspace=0.45, hspace=0.35)
+
+        # Plot berlin52 points
+        ax1 = fig.add_subplot(gs[0, 0])
+        ax1.scatter(xx,yy, c='r', edgecolors='black')
+        ax1.set_xlabel('x (kms)')
+        ax1.set_ylabel('y (kms)')
+        ax1.set_title('Cities', fontweight='bold', pad=10)
+
+        # Plot min cost found per iteration
+        ax2 = fig.add_subplot(gs[1, 0])
+        costline, = ax2.plot([], [])
+        ax2.set_xlabel('Iterations')
+        ax2.set_ylabel('Distance (kms)')
+        ax2.set_ylim(3000, 5500)
+        ax2.set_xlim(0, len(costs)+1)
+        ax2.set_title('Best path distance in every iteration', fontweight='bold', pad=10)
+
+        # Plot best path found per iteration
+        ax3 = fig.add_subplot(gs[:, 1:])
+        ax3.scatter(xx, yy, c='r', edgecolors='black')
+        ax3.set_xlabel('x (kms)')
+        ax3.set_ylabel('y (kms)')
+        title = ax3.set_title('Best Path Cost', fontweight='bold', fontsize=13, pad=10)
+        
+        
