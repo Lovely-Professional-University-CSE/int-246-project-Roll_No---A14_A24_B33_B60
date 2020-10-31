@@ -4,7 +4,7 @@ The Travelling Salesman Problem (TSP) is a complex problem in combinatorial opti
 
 For Ant Colony Optimization, We studied the effect of some parameters on the produced results, these parameters as: number of used ants, maximum tours, and number of cities. On the other hand, We studied the chromosome population, crossover probability, and mutation probability parameters as well as the effect of number of cities, generations and population effect on the Genetic Algorithm results. The comparison between Genetic Algorithm and Ant Colony Optimization is accomplished to state the better one for travelling salesman problem. The results of comparison show that ant colony is better than genetic algorithm and it generally requires only a few lines of code.
 
-[Image of Site](https://github.com/Lovely-Professional-University-CSE/int-246-project-Roll_No---A14_A24_B33_B60/blob/Bhupesh/images/site.png)
+![Image of Site](https://github.com/Lovely-Professional-University-CSE/int-246-project-Roll_No---A14_A24_B33_B60/blob/Bhupesh/images/site.png)
 
 ## Getting started 
 
