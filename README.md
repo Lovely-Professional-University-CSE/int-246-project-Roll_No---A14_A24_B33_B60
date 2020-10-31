@@ -1,4 +1,4 @@
-# int-246-project-Twinkle0799
+# TSP BY Genetic algorithm and ACO Algorithm
 
 The Travelling Salesman Problem (TSP) is a complex problem in combinatorial optimization that cannot be solved conventionally particularly when the number of cities increases. The aim of this project is to compare the effect of using two distributed algorithms (popular meta-heuristics techniques used for optimization tasks) which are Ant Colony Optimization (ACO) as a Swarm intelligence algorithm and Genetic Algorithm (GA).
 
