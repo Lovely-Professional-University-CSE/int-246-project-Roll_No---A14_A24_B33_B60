@@ -73,4 +73,4 @@ To see the output and comparison ,user can opt two pathways:
 
 ## Under the Guidance of -
 
-* **Dr. Aditya Kamparia** 
+* **Dr. Aditya Khamparia** 
