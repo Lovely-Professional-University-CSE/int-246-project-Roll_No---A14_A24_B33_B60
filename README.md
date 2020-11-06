@@ -60,8 +60,9 @@ To see the output and comparison ,user can opt two pathways:
 
 ## Built with 
 
-*[Tkinter] - The GUI Framework
-*[HTML,CSS,JS] -  For Deploying 
+1. [Tkinter] - The GUI Framework
+2. [HTML,CSS,JS] -  For Deploying 
+
 
 ## Authors
 
