@@ -71,6 +71,6 @@ To see the output and comparison ,user can opt two pathways:
 * **Resham Chaney** - [Resham Chaney](https://github.com/reshamchaney)
 * **Heena Rawat** - [heena1725](https://github.com/heena1725)
 
-## Acknowledgements
+## Under the Guidance of -
 
 * **Dr. Aditya Kamparia** 
