@@ -72,4 +72,4 @@ To see the output and comparison ,user can opt two pathways:
 
 ## Acknowledgements
 
-* **Dr. Aditya Kamparia** - Thank you Sir 
+* **Dr. Aditya Kamparia** 
